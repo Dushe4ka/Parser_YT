@@ -11,6 +11,7 @@ def get_youtube_data(api_key: str, channel_ids: list[str]) -> list[dict[str, Any
     data = []
     for channel_id in channel_ids:
         channel_data = youtube.channels().list(part='snippet, statistics', id=channel_id).execute()
+        next_page_token=None
 
         videos_data = []
         while True:
@@ -36,7 +37,10 @@ def create_database(database_name: str, params: dict):
     conn.autocommit = True
     cur = conn.cursor()
 
-    cur.execute(f"DROP DATABASE {database_name}")
+    try:
+        cur.execute(f"DROP DATABASE {database_name}")
+    except:
+        pass
     cur.execute(f"CREATE DATABASE {database_name}")
 
     conn.close()
